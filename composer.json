@@ -1,0 +1,47 @@
+{
+	"name": "68publishers/doctrine-bridge",
+	"description": "Bridges between integrations of Doctrine ORM and '68publishers bundles.",
+	"keywords": ["68publishers", "doctrine", "orm", "bridge", "nette"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Tomáš Glawaty",
+			"email": "tomasglawaty@icloud.com"
+		}
+	],
+	"require": {
+		"php": "^7.2",
+		"nette/di": "^3.0.3"
+	},
+	"require-dev": {
+		"bamarni/composer-bin-plugin": "^1.4",
+		"friendsofphp/php-cs-fixer": "^2.0",
+		"nette/bootstrap": "^3.0",
+		"nette/tester": "^2.0",
+		"roave/security-advisories": "dev-master"
+	},
+	"suggest": {
+		"nettrine/orm": "For integration with nettrine/orm"
+	},
+	"autoload": {
+		"psr-4": {
+			"SixtyEightPublishers\\DoctrineBridge\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"SixtyEightPublishers\\DoctrineBridge\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"scripts": {
+		"tests": [
+			"@tests:lowest",
+			"@tests:highest"
+		],
+		"tests:lowest" : "composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable && composer bin all update --no-progress --prefer-dist --prefer-lowest --prefer-stable && vendor/bin/tester ./tests",
+		"tests:highest" : "composer update --no-progress --prefer-dist --prefer-stable && composer bin all update --no-progress --prefer-dist --prefer-stable && vendor/bin/tester ./tests"
+	}
+}
