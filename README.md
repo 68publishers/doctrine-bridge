@@ -7,7 +7,7 @@ A package contains bridges for the most used integrations of [doctrine/orm](http
 Bridges for this integrations will be implemented in the future:
 - [Kdyby](https://github.com/Kdyby/Doctrine) (missing support for Nette 3)
 
-Why? because we want to keep our bundles independent from specific integrations so applications can use any of the integrations mentioned above and will be still compatible with our bundles.
+Why? Because we want to keep our bundles independent from specific integrations so applications can use any of the integrations mentioned above and will be still compatible with our bundles.
 
 ## Installation
 
