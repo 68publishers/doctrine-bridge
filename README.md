@@ -11,6 +11,7 @@ A package contains bridges for the most used integrations of [doctrine/orm](http
 - [Nettrine](https://github.com/nettrine)
 
 Bridges for this integrations will be implemented in the future:
+
 - [Kdyby](https://github.com/Kdyby/Doctrine) (missing support for Nette 3)
 
 Why? Because we want to keep our bundles independent from specific integrations so applications can use any of the integrations mentioned above and will be still compatible with our bundles.
@@ -43,7 +44,7 @@ use SixtyEightPublishers\DoctrineBridge\DI\DatabaseType;
 use SixtyEightPublishers\DoctrineBridge\DI\DatabaseTypeProviderInterface;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
 
-class FooExtension extends CompilerExtension implements DatabaseTypeProviderInterface 
+class FooExtension extends CompilerExtension implements DatabaseTypeProviderInterface
 {
     public function getDatabaseTypes() : array
     {
