@@ -1,10 +1,10 @@
 {
-    "require": {
-        "theofidry/composer-inheritance-plugin": "^1.0",
-        "nettrine/orm": "^0.7"
-    },
-    "config": {
-        "bin-dir": "bin",
-        "sort-packages": true
-    }
+	"require": {
+		"theofidry/composer-inheritance-plugin": "^1.0",
+		"nettrine/orm": "^0.7"
+	},
+	"config": {
+		"bin-dir": "bin",
+		"sort-packages": true
+	}
 }
