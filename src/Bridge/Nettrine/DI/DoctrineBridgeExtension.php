@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace SixtyEightPublishers\DoctrineBridge\Bridge\Nettrine\DI;
 
+use Doctrine\DBAL\Types\Type;
 use Nette\DI\CompilerExtension;
+use Nette\PhpGenerator\PhpLiteral;
+use Nette\DI\Definitions\Reference;
 use Nettrine\DBAL\DI\DbalExtension;
 use Nettrine\ORM\DI\Helpers\MappingHelper;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use SixtyEightPublishers\DoctrineBridge\DI\EntityMapping;
 use SixtyEightPublishers\DoctrineBridge\DI\DatabaseTypeProviderInterface;
 use SixtyEightPublishers\DoctrineBridge\DI\TargetEntityProviderInterface;
+use SixtyEightPublishers\DoctrineBridge\Type\ContainerAwareTypeInterface;
 use SixtyEightPublishers\DoctrineBridge\DI\EntityMappingProviderInterface;
 
 final class DoctrineBridgeExtension extends CompilerExtension
@@ -51,9 +55,10 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		}
 
 		$dbalExtensionName = key($dbalExtensions);
+		$builder = $this->getContainerBuilder();
 
 		/** @var \Nette\DI\Definitions\ServiceDefinition $connectionFactory */
-		$connectionFactory = $this->getContainerBuilder()->getDefinition($dbalExtensionName . '.connectionFactory');
+		$connectionFactory = $builder->getDefinition($dbalExtensionName . '.connectionFactory');
 		$factory = $connectionFactory->getFactory();
 		[$types, $typesMapping] = $factory->arguments;
 
@@ -73,6 +78,23 @@ final class DoctrineBridgeExtension extends CompilerExtension
 
 		$factory->arguments[0] = $types;
 		$factory->arguments[1] = $typesMapping;
+
+		/** @var \Nette\DI\Definitions\ServiceDefinition $connection */
+		$connection = $builder->getDefinition($dbalExtensionName . '.connection');
+
+		foreach ($types as $typeName => $typeOptions) {
+			$typeClassName = $typeOptions['class'];
+
+			if (!is_subclass_of($typeClassName, ContainerAwareTypeInterface::class, TRUE)) {
+				continue;
+			}
+
+			$connection->addSetup('?::getType(?)->setContainer(?)', [
+				new PhpLiteral(Type::class),
+				$typeName,
+				new Reference($builder::THIS_CONTAINER),
+			]);
+		}
 	}
 
 	/**

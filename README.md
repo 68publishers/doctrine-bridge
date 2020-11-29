@@ -56,6 +56,29 @@ class FooExtension extends CompilerExtension implements DatabaseTypeProviderInte
 }
 ```
 
+#### Services in Doctrine Types
+
+Doctrine DBAL types don't have access to services by default. 
+With this extension, you can receive DI Container in your custom types when the Connection is created.
+
+```php
+<?php
+
+use Nette\DI\Container;
+use Doctrine\DBAL\Types\StringType;
+use SixtyEightPublishers\DoctrineBridge\Type\ContainerAwareTypeInterface;
+
+final class CustomType extends StringType implements ContainerAwareTypeInterface
+{
+    private $service;
+
+    public function setContainer(Container $container) : void
+    {
+        $this->service = $container->getByType(MyService::class);
+    }
+}
+```
+
 ### Entity Mapping Provider
 
 ```php
