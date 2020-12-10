@@ -15,15 +15,20 @@ final class DatabaseType
 	/** @var string|NULL  */
 	public $mappingType;
 
+	/** @var array  */
+	public $context;
+
 	/**
 	 * @param string      $name
 	 * @param string      $class
 	 * @param string|NULL $mappingType
+	 * @param array       $context
 	 */
-	public function __construct(string $name, string $class, ?string $mappingType = NULL)
+	public function __construct(string $name, string $class, ?string $mappingType = NULL, array $context = [])
 	{
 		$this->name = $name;
 		$this->class = $class;
 		$this->mappingType = $mappingType;
+		$this->context = $context;
 	}
 }

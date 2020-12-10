@@ -61,6 +61,7 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		$connectionFactory = $builder->getDefinition($dbalExtensionName . '.connectionFactory');
 		$factory = $connectionFactory->getFactory();
 		[$types, $typesMapping] = $factory->arguments;
+		$contexts = [];
 
 		/** @var \SixtyEightPublishers\DoctrineBridge\DI\DatabaseTypeProviderInterface $extension */
 		foreach ($this->compiler->getExtensions(DatabaseTypeProviderInterface::class) as $extension) {
@@ -73,6 +74,8 @@ final class DoctrineBridgeExtension extends CompilerExtension
 				if (NULL !== $databaseType->mappingType) {
 					$typesMapping[$databaseType->name] = $databaseType->mappingType;
 				}
+
+				$contexts[$databaseType->name] = $databaseType->context;
 			}
 		}
 
@@ -89,10 +92,11 @@ final class DoctrineBridgeExtension extends CompilerExtension
 				continue;
 			}
 
-			$connection->addSetup('?::getType(?)->setContainer(?)', [
+			$connection->addSetup('?::getType(?)->setContainer(?, ?)', [
 				new PhpLiteral(Type::class),
 				$typeName,
 				new Reference($builder::THIS_CONTAINER),
+				$contexts[$typeName] ?? [],
 			]);
 		}
 	}
