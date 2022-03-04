@@ -3,16 +3,16 @@
 $finder = PhpCsFixer\Finder::create()
 	->in(__DIR__ . '/src')
 	->in(__DIR__ . '/tests')
-	->exclude('temp')
+	->exclude(__DIR__ . '/tests/temp')
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config)
 	->setUsingCache(FALSE)
 	->setIndent("\t")
 	->setRules([
 		'@PSR2' => TRUE,
 		'array_syntax' => ['syntax' => 'short'],
-		'trailing_comma_in_multiline_array' => true,
+		'trailing_comma_in_multiline' => TRUE,
 		'constant_case' => [
 			'case' => 'upper',
 		],

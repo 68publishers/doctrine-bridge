@@ -1,7 +1,8 @@
 {
 	"require": {
 		"theofidry/composer-inheritance-plugin": "^1.0",
-		"nettrine/orm": "^0.7"
+		"nettrine/orm": "^0.8",
+		"nettrine/migrations": "^0.8"
 	},
 	"config": {
 		"bin-dir": "bin",

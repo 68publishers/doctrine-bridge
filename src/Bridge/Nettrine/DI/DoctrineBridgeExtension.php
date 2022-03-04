@@ -10,12 +10,16 @@ use Nette\PhpGenerator\PhpLiteral;
 use Nette\DI\Definitions\Reference;
 use Nettrine\DBAL\DI\DbalExtension;
 use Nettrine\ORM\DI\Helpers\MappingHelper;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nettrine\Migrations\DI\MigrationsExtension;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
+use Doctrine\Migrations\Configuration\Configuration;
 use SixtyEightPublishers\DoctrineBridge\DI\EntityMapping;
 use SixtyEightPublishers\DoctrineBridge\DI\DatabaseTypeProviderInterface;
 use SixtyEightPublishers\DoctrineBridge\DI\TargetEntityProviderInterface;
 use SixtyEightPublishers\DoctrineBridge\Type\ContainerAwareTypeInterface;
 use SixtyEightPublishers\DoctrineBridge\DI\EntityMappingProviderInterface;
+use SixtyEightPublishers\DoctrineBridge\DI\MigrationsDirectoriesProviderInterface;
 
 final class DoctrineBridgeExtension extends CompilerExtension
 {
@@ -24,7 +28,7 @@ final class DoctrineBridgeExtension extends CompilerExtension
 	 */
 	public function loadConfiguration(): void
 	{
-		if (0 >= count($this->compiler->getExtensions(TargetEntityProviderInterface::class))) {
+		if (!$this->isExtensionLoaded(TargetEntityProviderInterface::class)) {
 			return;
 		}
 
@@ -41,6 +45,7 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		$this->processDatabaseTypeProviders();
 		$this->processEntityMappings();
 		$this->processTargetEntities();
+		$this->processMigrationsDirectories();
 	}
 
 	/**
@@ -57,8 +62,10 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		$dbalExtensionName = key($dbalExtensions);
 		$builder = $this->getContainerBuilder();
 
-		/** @var \Nette\DI\Definitions\ServiceDefinition $connectionFactory */
 		$connectionFactory = $builder->getDefinition($dbalExtensionName . '.connectionFactory');
+
+		assert($connectionFactory instanceof ServiceDefinition);
+
 		$factory = $connectionFactory->getFactory();
 		[$types, $typesMapping] = $factory->arguments;
 		$contexts = [];
@@ -82,8 +89,9 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		$factory->arguments[0] = $types;
 		$factory->arguments[1] = $typesMapping;
 
-		/** @var \Nette\DI\Definitions\ServiceDefinition $connection */
 		$connection = $builder->getDefinition($dbalExtensionName . '.connection');
+
+		assert($connection instanceof ServiceDefinition);
 
 		foreach ($types as $typeName => $typeOptions) {
 			$typeClassName = $typeOptions['class'];
@@ -148,5 +156,37 @@ final class DoctrineBridgeExtension extends CompilerExtension
 				$listener->addSetup('addResolveTargetEntity', [$targetEntity->originalEntity, $targetEntity->newEntity, $targetEntity->mapping]);
 			}
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function processMigrationsDirectories(): void
+	{
+		if (!$this->isExtensionLoaded(MigrationsExtension::class)) {
+			return;
+		}
+
+		$builder = $this->getContainerBuilder();
+		$configuration = $builder->getDefinitionByType(Configuration::class);
+
+		assert($configuration instanceof ServiceDefinition);
+
+		/** @var \SixtyEightPublishers\DoctrineBridge\DI\MigrationsDirectoriesProviderInterface $extension */
+		foreach ($this->compiler->getExtensions(MigrationsDirectoriesProviderInterface::class) as $extension) {
+			foreach ($extension->getMigrationsDirectories() as $migrationsDirectory) {
+				$configuration->addSetup('addMigrationsDirectory', [$migrationsDirectory->namespace, $migrationsDirectory->directory]);
+			}
+		}
+	}
+
+	/**
+	 * @param string $classname
+	 *
+	 * @return bool
+	 */
+	private function isExtensionLoaded(string $classname): bool
+	{
+		return 0 < count($this->compiler->getExtensions($classname));
 	}
 }
