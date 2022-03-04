@@ -6,14 +6,11 @@ namespace SixtyEightPublishers\DoctrineBridge\DI;
 
 final class TargetEntity
 {
-	/** @var string  */
-	public $originalEntity;
+	public string $originalEntity;
 
-	/** @var string  */
-	public $newEntity;
+	public string $newEntity;
 
-	/** @var array  */
-	public $mapping;
+	public array$mapping;
 
 	/**
 	 * @param string $originalEntity

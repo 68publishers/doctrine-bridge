@@ -10,14 +10,11 @@ final class EntityMapping
 	public const DRIVER_YAML = 'yaml';
 	public const DRIVER_XML = 'xml';
 
-	/** @var string  */
-	public $driver;
+	public string $driver;
 
-	/** @var string  */
-	public $namespace;
+	public string $namespace;
 
-	/** @var string  */
-	public $path;
+	public string $path;
 
 	/**
 	 * @param string $driver

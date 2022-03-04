@@ -6,17 +6,13 @@ namespace SixtyEightPublishers\DoctrineBridge\DI;
 
 final class DatabaseType
 {
-	/** @var string  */
-	public $name;
+	public string $name;
 
-	/** @var string  */
-	public $class;
+	public string $class;
 
-	/** @var string|NULL  */
-	public $mappingType;
+	public ?string $mappingType;
 
-	/** @var array  */
-	public $context;
+	public array $context;
 
 	/**
 	 * @param string      $name
