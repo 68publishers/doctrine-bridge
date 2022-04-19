@@ -6,9 +6,10 @@ namespace SixtyEightPublishers\DoctrineBridge\DI;
 
 final class EntityMapping
 {
-	public const DRIVER_ANNOTATIONS = 'annotations';
-	public const DRIVER_YAML = 'yaml';
+	public const DRIVER_ANNOTATION = 'annotation';
 	public const DRIVER_XML = 'xml';
+	public const DRIVER_SIMPLIFIED_XML = 'simplified_xml';
+	public const DRIVER_ATTRIBUTE = 'attribute';
 
 	public string $driver;
 

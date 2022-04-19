@@ -6,15 +6,7 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Latest Version on Packagist][ico-version]][link-packagist]
 
-A package contains bridges for the most used integrations of [doctrine/orm](https://github.com/doctrine/orm) into [Nette Framework](https://nette.org):
-
-- [Nettrine](https://github.com/nettrine)
-
-Bridges for this integrations will be implemented in the future:
-
-- [Kdyby](https://github.com/Kdyby/Doctrine) (missing support for Nette 3)
-
-Why? Because we want to keep our bundles independent from specific integrations so applications can use any of the integrations mentioned above and will be still compatible with our bundles.
+Register custom DBAL types, entity mappings, target entities and migration directories directly inside your CompilerExtensions!
 
 ## Installation
 
@@ -29,7 +21,7 @@ $ composer require 68publishers/doctrine-bridge
 ```neon
 extensions:
     # if you are using Nettrine:
-    doctrine_bridge: SixtyEightPublishers\DoctrineBridge\Bridge\Nettrine\DI\DoctrineBridgeExtension
+    doctrine_bridge: SixtyEightPublishers\DoctrineBridge\DI\DoctrineBridgeExtension
 ```
 
 ## Usage
@@ -72,7 +64,7 @@ final class CustomType extends StringType implements ContainerAwareTypeInterface
 {
     private $service;
 
-    public function setContainer(Container $container) : void
+    public function setContainer(Container $container, array $context = []) : void
     {
         $this->service = $container->getByType(MyService::class);
     }
@@ -93,9 +85,9 @@ class FooExtension extends CompilerExtension implements EntityMappingProviderInt
     public function getEntityMappings() : array
     {
         return [
-            new EntityMapping(EntityMapping::DRIVER_ANNOTATIONS, 'App\\Entity', __DIR__ . '/../Entity'),
-            new EntityMapping(EntityMapping::DRIVER_YAML, 'App\\Entity', __DIR__ . '/../Entity/yaml'),
-            new EntityMapping(EntityMapping::DRIVER_ANNOTATIONS, 'App\\Entity', __DIR__ . '/../Entity/xml'),
+            new EntityMapping(EntityMapping::DRIVER_ANNOTATION, 'App\\Entity', __DIR__ . '/../Entity'),
+            new EntityMapping(EntityMapping::DRIVER_ATTRIBUTE, 'App\\Entity', __DIR__ . '/../Entity'),
+            new EntityMapping(EntityMapping::DRIVER_XML, 'App\\Entity', __DIR__ . '/../Entity/xml'),
         ];
     }
 }
@@ -121,12 +113,31 @@ class FooExtension extends CompilerExtension implements TargetEntityProviderInte
 }
 ```
 
+### Migration directories
+```php
+<?php
+
+use Nette\DI\CompilerExtension;
+use SixtyEightPublishers\DoctrineBridge\DI\TargetEntity;
+use SixtyEightPublishers\DoctrineBridge\DI\MigrationsDirectoriesProviderInterface;
+
+class FooExtension extends CompilerExtension implements MigrationsDirectoriesProviderInterface
+{
+    public function getMigrationsDirectories() : array
+    {
+        return [
+            new MigrationsDirectory('App\\Bundle\\FooBundle\\Migration', __DIR__ . '/../Migration'),
+        ];
+    }
+}
+```
+
 ## Contributing
 
 Before committing any changes, don't forget to run
 
 ```bash
-$ vendor/bin/php-cs-fixer fix --config=.php_cs.dist -v --dry-run
+$ vendor/bin/php-cs-fixer fix -v
 ```
 
 and
