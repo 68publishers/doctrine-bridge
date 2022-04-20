@@ -20,8 +20,26 @@ $ composer require 68publishers/doctrine-bridge
 
 ```neon
 extensions:
-    # if you are using Nettrine:
-    doctrine_bridge: SixtyEightPublishers\DoctrineBridge\DI\DoctrineBridgeExtension
+	68publishers.doctrine_bridge: SixtyEightPublishers\DoctrineBridge\DI\DoctrineBridgeExtension
+
+# Defaults:
+68publishers.doctrine_bridge:
+	database_types_enabled: yes # Enable/disable registration of custom DBAL types
+	entity_mappings_enabled: yes # Enabled/disable registration of entity mappings
+	target_entities_enabled: yes # Enabled/disable resolving of target entities
+	migration_directories_enabled: yes # Enabled/disable registration of migrations for doctrine/migrations
+
+	# Types or names of dependent services. Allowed inputs are `ServiceClassname`, `@ServiceClassname`, `@my_service` or simply `my_service` 
+	services:
+		dbal_connection: Doctrine\DBAL\Connection
+		drivers:
+			# For drivers, you can use `null`. In this case, mappings for the drive will be omitted
+			chain: Doctrine\Persistence\Mapping\Driver\MappingDriverChain
+			annotation: Doctrine\ORM\Mapping\Driver\AnnotationDriver
+			xml: Doctrine\ORM\Mapping\Driver\XmlDriver
+			simplified_xml: Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver
+			attribute: Doctrine\ORM\Mapping\Driver\AttributeDriver
+		migrations_configuration: Doctrine\Migrations\Configuration\Configuration
 ```
 
 ## Usage
