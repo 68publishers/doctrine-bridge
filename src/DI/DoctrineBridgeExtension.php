@@ -111,14 +111,14 @@ final class DoctrineBridgeExtension extends CompilerExtension
 				]);
 
 				if ($databaseType->commented) {
-					$connection->addSetup('@self->getDatabasePlatform()->markDoctrineTypeCommented(?::getType(?))', [
+					$connection->addSetup('$service->getDatabasePlatform()->markDoctrineTypeCommented(?::getType(?))', [
 						new PhpLiteral(Type::class),
 						$databaseType->name,
 					]);
 				}
 
 				if (NULL !== $databaseType->mappingType) {
-					$connection->addSetup('@self->getDatabasePlatform()->registerDoctrineTypeMapping(?, ?)', [
+					$connection->addSetup('$service->getDatabasePlatform()->registerDoctrineTypeMapping(?, ?)', [
 						$databaseType->name,
 						$databaseType->mappingType,
 					]);
