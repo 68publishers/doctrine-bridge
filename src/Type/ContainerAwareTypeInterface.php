@@ -9,10 +9,9 @@ use Nette\DI\Container;
 interface ContainerAwareTypeInterface
 {
 	/**
-	 * @param \Nette\DI\Container $container
-	 * @param array               $context
+	 * @internal
 	 *
-	 * @return void
+	 * @param array<mixed> $context
 	 */
 	public function setContainer(Container $container, array $context = []): void;
 }

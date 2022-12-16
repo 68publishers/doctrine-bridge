@@ -1,0 +1,7 @@
+extensions:
+	nettrine.orm.xml: Nettrine\ORM\DI\OrmXmlExtension
+
+nettrine.orm.xml:
+	mapping: []
+	simple: yes
+	fileExtension: .orm.xml

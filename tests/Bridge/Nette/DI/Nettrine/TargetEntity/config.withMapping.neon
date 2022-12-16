@@ -1,0 +1,8 @@
+includes:
+	- base.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\TargetEntityProviderExtension(
+		SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Entity\EntityWithAttributesMapping,
+		[ test_key: test_value ]
+	)

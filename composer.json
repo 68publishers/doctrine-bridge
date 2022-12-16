@@ -10,14 +10,18 @@
 		}
 	],
 	"require": {
-		"php": "^7.4 || ^8.0",
-		"nette/di": "^3.0.3"
+		"php": "^8.1",
+		"nette/di": "^3.0.10",
+		"doctrine/orm": "^2.10.0"
 	},
 	"require-dev": {
-		"bamarni/composer-bin-plugin": "^1.4",
-		"friendsofphp/php-cs-fixer": "^3.0",
-		"nette/bootstrap": "^3.0",
-		"nette/tester": "^2.3.4",
+		"bamarni/composer-bin-plugin": "^1.8",
+		"doctrine/migrations": "^3.1",
+		"friendsofphp/php-cs-fixer": "^3.13",
+		"nette/bootstrap": "^3.1",
+		"nette/tester": "^2.4.3",
+		"phpstan/phpstan": "^1.9",
+		"phpstan/phpstan-nette": "^1.1",
 		"roave/security-advisories": "dev-latest"
 	},
 	"suggest": {
@@ -34,23 +38,19 @@
 			"SixtyEightPublishers\\DoctrineBridge\\Tests\\": "tests/"
 		}
 	},
-	"config": {
-		"sort-packages": true
+	"extra": {
+		"bamarni-bin": {
+			"bin-links": false,
+			"forward-command": true
+		},
+		"merge-plugin": {
+			"merge-dev": true
+		}
 	},
-	"scripts": {
-		"tests": [
-			"@tests:lowest",
-			"@tests:highest"
-		],
-		"tests:lowest" : [
-			"@composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable",
-			"@composer bin all update --no-progress --prefer-dist --prefer-lowest --prefer-stable",
-			"vendor/bin/tester ./tests"
-		],
-		"tests:highest" : [
-			"@composer update --no-progress --prefer-dist --prefer-stable",
-			"@composer bin all update --no-progress --prefer-dist --prefer-stable",
-			"vendor/bin/tester ./tests"
-		]
+	"config": {
+		"allow-plugins": {
+			"bamarni/composer-bin-plugin": true
+		},
+		"sort-packages": true
 	}
 }

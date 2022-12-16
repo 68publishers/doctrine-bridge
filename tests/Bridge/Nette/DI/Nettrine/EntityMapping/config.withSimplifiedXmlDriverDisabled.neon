@@ -1,0 +1,11 @@
+includes:
+	- ../base.neon
+	- ../driver.simplifiedXml.neon
+
+extensions:
+	test.simplified_xml: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\SimplifiedXmlEntityMappingProviderExtension
+
+bridge:
+	services:
+		drivers:
+			simplified_xml: no

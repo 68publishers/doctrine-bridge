@@ -1,0 +1,9 @@
+includes:
+	- ../base.neon
+	- migrations.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\MigrationDirectoriesProviderExtension
+
+bridge:
+	migration_directories_enabled: no

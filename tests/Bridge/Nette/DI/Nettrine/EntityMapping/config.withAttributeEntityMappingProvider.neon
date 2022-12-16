@@ -1,0 +1,6 @@
+includes:
+	- ../base.neon
+	- ../driver.attribute.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\AttributeEntityMappingProviderExtension

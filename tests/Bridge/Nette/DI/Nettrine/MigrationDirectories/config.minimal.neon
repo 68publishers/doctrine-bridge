@@ -1,0 +1,6 @@
+includes:
+	- ../base.neon
+	- migrations.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\MigrationDirectoriesProviderExtension

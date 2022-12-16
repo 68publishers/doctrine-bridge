@@ -1,0 +1,11 @@
+includes:
+	- ../base.neon
+	- ../driver.attribute.neon
+	- ../driver.xml.neon
+
+extensions:
+	test.attributes: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\AttributeEntityMappingProviderExtension
+	test.xml: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\XmlEntityMappingProviderExtension
+
+bridge:
+	entity_mappings_enabled: no

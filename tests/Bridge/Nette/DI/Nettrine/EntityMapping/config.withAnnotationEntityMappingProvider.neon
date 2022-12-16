@@ -1,0 +1,6 @@
+includes:
+	- ../base.neon
+	- ../driver.annotation.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\AnnotationEntityMappingProviderExtension
