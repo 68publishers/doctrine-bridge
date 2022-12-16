@@ -1,0 +1,7 @@
+includes:
+	- ../base.neon
+	- ../driver.annotation.neon
+
+nettrine.orm.annotations:
+	mapping:
+		- %fixturesDir%/Entity

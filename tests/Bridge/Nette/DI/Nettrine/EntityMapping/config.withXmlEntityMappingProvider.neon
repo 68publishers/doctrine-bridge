@@ -1,0 +1,6 @@
+includes:
+	- ../base.neon
+	- ../driver.xml.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\XmlEntityMappingProviderExtension

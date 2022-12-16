@@ -1,0 +1,3 @@
+extensions:
+	bridge: SixtyEightPublishers\DoctrineBridge\Bridge\Nette\DI\DoctrineBridgeExtension
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\DatabaseTypeProviderExtension

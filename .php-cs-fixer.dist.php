@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 $finder = PhpCsFixer\Finder::create()
 	->in(__DIR__ . '/src')
 	->in(__DIR__ . '/tests')
-	->exclude(__DIR__ . '/tests/temp')
-;
+	->name(['*.php', '*.phpt']);
 
-return (new PhpCsFixer\Config)
+return (new PhpCsFixer\Config())
 	->setUsingCache(FALSE)
 	->setIndent("\t")
 	->setRules([
@@ -14,7 +15,7 @@ return (new PhpCsFixer\Config)
 		'array_syntax' => ['syntax' => 'short'],
 		'trailing_comma_in_multiline' => TRUE,
 		'constant_case' => [
-			'case' => 'upper',
+			'case' => 'lower',
 		],
 		'declare_strict_types' => TRUE,
 		'phpdoc_align' => TRUE,
@@ -29,11 +30,19 @@ return (new PhpCsFixer\Config)
 		],
 		'ordered_imports' => [
 			'sort_algorithm' => 'length',
+			'imports_order' => ['class', 'function', 'const'],
 		],
 		'no_unused_imports' => TRUE,
 		'single_line_after_imports' => TRUE,
 		'no_leading_import_slash' => TRUE,
+		'global_namespace_import' => [
+			'import_constants' => TRUE,
+			'import_functions' => TRUE,
+			'import_classes' => TRUE,
+		],
+		'concat_space' => [
+			'spacing' => 'one',
+		],
 	])
 	->setRiskyAllowed(TRUE)
-	->setFinder($finder)
-;
+	->setFinder($finder);

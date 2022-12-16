@@ -1,0 +1,5 @@
+extensions:
+	nettrine.orm.attributes: Nettrine\ORM\DI\OrmAttributesExtension
+
+nettrine.orm.attributes:
+	mapping: []

@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
+use Tester\Environment;
+
 if (@!include __DIR__ . '/../vendor-bin/nettrine/vendor/autoload.php') {
-	echo 'Please run `composer install && composer bin all install`';
+	echo 'Install Nette Tester using `composer install`';
 	exit(1);
 }
 
-require __DIR__ . '/bootstrap.php';
+Environment::setup();
+
+if (PHP_VERSION_ID >= 80200) {
+	error_reporting(~E_DEPRECATED);
+}

@@ -1,0 +1,6 @@
+includes:
+	- ../base.neon
+	- ../driver.simplifiedXml.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\SimplifiedXmlEntityMappingProviderExtension

@@ -1,11 +1,14 @@
 {
 	"require": {
-		"theofidry/composer-inheritance-plugin": "^1.0",
-		"nettrine/orm": "^0.8",
-		"nettrine/migrations": "^0.8"
+		"nettrine/orm": "^0.8.3",
+		"nettrine/migrations": "^0.8",
+		"theofidry/composer-inheritance-plugin": "^1.2"
 	},
 	"config": {
-		"bin-dir": "bin",
+		"allow-plugins": {
+			"theofidry/composer-inheritance-plugin": true,
+			"wikimedia/composer-merge-plugin": true
+		},
 		"sort-packages": true
 	}
 }

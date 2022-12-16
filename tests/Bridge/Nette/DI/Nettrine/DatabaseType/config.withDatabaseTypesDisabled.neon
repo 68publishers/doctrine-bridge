@@ -1,0 +1,8 @@
+includes:
+	- ../base.neon
+
+extensions:
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\DatabaseTypeProviderExtension
+
+bridge:
+	database_types_enabled: no

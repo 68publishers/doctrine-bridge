@@ -1,0 +1,6 @@
+extensions:
+	nettrine.annotations: Nettrine\Annotations\DI\AnnotationsExtension
+	nettrine.orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+
+nettrine.orm.annotations:
+	mapping: []
