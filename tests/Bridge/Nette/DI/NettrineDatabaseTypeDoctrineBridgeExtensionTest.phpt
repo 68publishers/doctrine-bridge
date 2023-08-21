@@ -12,6 +12,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Tester\CodeCoverage\Collector;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use SixtyEightPublishers\DoctrineBridge\Tests\Bridge\Nette\DI\ContainerFactory;
 use SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\DatabaseType\CustomTypeWithContainer;
 use function assert;
@@ -66,6 +67,35 @@ final class NettrineDatabaseTypeDoctrineBridgeExtensionTest extends TestCase
 		Assert::false(Type::hasType('test_2'));
 		Assert::false(Type::hasType('test_3'));
 		Assert::false(Type::hasType('test_4'));
+	}
+
+	public function testDatabaseTypesShouldBeRegisteredViaDatabaseTypeProviderExtension(): void
+	{
+		$container = ContainerFactory::create(__DIR__ . '/Nettrine/DatabaseType/config.withDatabaseTypeProviderExtension.neon');
+		$connection = $container->getByType(Connection::class);
+		$platform = $connection->getDatabasePlatform();
+		assert($connection instanceof Connection && $platform instanceof AbstractPlatform);
+
+		Assert::true(Type::hasType('custom_type_inline'));
+		Assert::true(Type::hasType('custom_type_extended'));
+		Assert::true(Type::hasType('custom_type_extended_2'));
+
+		Assert::equal(
+			CustomTypeWithContainer::create($container, []),
+			Type::getType('custom_type_inline'),
+		);
+
+		Assert::equal(
+			CustomTypeWithContainer::create($container, []),
+			Type::getType('custom_type_extended'),
+		);
+
+		Assert::equal(
+			CustomTypeWithContainer::create($container, [
+				'default_value' => 3,
+			]),
+			Type::getType('custom_type_extended_2'),
+		);
 	}
 
 	protected function tearDown(): void

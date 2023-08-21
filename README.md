@@ -90,6 +90,25 @@ final class MyExtension extends StringType implements ContainerAwareTypeInterfac
 }
 ```
 
+#### Registering Doctrine Types via bundled DatabaseTypeProviderExtension
+
+To register custom types, it is not necessary to create a custom extension, but the class `DatabaseTypeProviderExtension` can be used.
+
+```neon
+extensions:
+    68publishers.doctrine_bridge.database_type_provider: SixtyEightPublishers\DoctrineBridge\Bridge\Nette\DI\DatabaseTypeProviderExtension
+
+68publishers.doctrine_bridge.database_type_provider:
+    # inline notation:
+    my_type_1: App\DbalType\MyType1
+
+    # structured notation:
+    my_type_2:
+        class: App\DbalType\MyType2
+        mapping_type: text
+        context: []
+```
+
 ### Entity Mapping Provider
 
 ```php

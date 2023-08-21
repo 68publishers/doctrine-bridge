@@ -1,0 +1,15 @@
+includes:
+	- ../base.neon
+
+extensions:
+	database_type_provider: SixtyEightPublishers\DoctrineBridge\Bridge\Nette\DI\DatabaseTypeProviderExtension
+
+database_type_provider:
+    custom_type_inline: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\DatabaseType\CustomTypeWithContainer
+    custom_type_extended:
+        class: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\DatabaseType\CustomTypeWithContainer
+    custom_type_extended_2:
+        class: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\DatabaseType\CustomTypeWithContainer
+        mapping_type: integer
+        context:
+            default_value: 3

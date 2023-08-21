@@ -19,4 +19,12 @@ final class CustomTypeWithContainer extends StringType implements ContainerAware
 		$this->container = $container;
 		$this->context = $context;
 	}
+
+	public static function create(Container $container, array $context): self
+	{
+		$type = new self();
+		$type->setContainer($container, $context);
+
+		return $type;
+	}
 }
