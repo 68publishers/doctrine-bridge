@@ -1,0 +1,36 @@
+extensions:
+	bridge: SixtyEightPublishers\DoctrineBridge\Bridge\Nette\DI\DoctrineBridgeExtension
+	database_type_provider: SixtyEightPublishers\DoctrineBridge\Bridge\Nette\DI\DatabaseTypeProviderExtension
+	test.types: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\DatabaseTypeProviderExtension
+	test.xml: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\XmlEntityMappingProviderExtension
+	test.simplified_xml: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\SimplifiedXmlEntityMappingProviderExtension
+	test.attribute: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\AttributeEntityMappingProviderExtension
+	test.target_entity: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\TargetEntityProviderExtension(
+		SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Entity\EntityWithAttributesMapping
+	)
+	test.migrations: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\MigrationDirectoriesProviderExtension
+
+bridge:
+	services:
+		drivers:
+			xml: @xmlDriver
+			simplified_xml: @simplifiedXmlDriver
+
+database_type_provider:
+	custom_type_inline: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\DatabaseType\CustomTypeWithContainer
+	custom_type_extended_2:
+		class: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\DatabaseType\CustomTypeWithContainer
+		mapping_type: integer
+		context:
+			default_value: 3
+
+services:
+	# `serverVersion` is needed, otherwise the registration of `mapping_type` connects to the database
+	- Doctrine\DBAL\DriverManager::getConnection([driver: pdo_pgsql, serverVersion: '14'])
+	- Doctrine\Persistence\Mapping\Driver\MappingDriverChain
+	xmlDriver: Doctrine\ORM\Mapping\Driver\XmlDriver([])
+	simplifiedXmlDriver:
+		create: Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver([])
+		autowired: false
+	- Doctrine\ORM\Mapping\Driver\AttributeDriver([])
+	- Doctrine\Migrations\Configuration\Configuration

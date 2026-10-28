@@ -18,6 +18,8 @@ The best way to install 68publishers/doctrine-bridge is using Composer:
 $ composer require 68publishers/doctrine-bridge
 ```
 
+The package requires PHP `^8.3`, `nette/di` `^3.0.10` and `doctrine/orm` `^2.10.0 || ^3.0`.
+
 ## Configuration
 
 ```neon
@@ -44,7 +46,20 @@ extensions:
         migrations_configuration: Doctrine\Migrations\Configuration\Configuration
 ```
 
-The package is fully tested in combination with [nettrine/orm](https://github.com/contributte/doctrine-orm) and [nettrine/migrations](https://github.com/contributte/doctrine-migrations), however it can be plugged into almost any Doctrine integration into the Nette Framework using the `services` options.
+The package is fully tested in combination with [nettrine/orm](https://github.com/contributte/doctrine-orm) and [nettrine/migrations](https://github.com/contributte/doctrine-migrations) `0.8` (`doctrine/orm` 2), however it can be plugged into almost any Doctrine integration into the Nette Framework using the `services` options.
+The tests also cover a setup with plain service definitions on `doctrine/orm` 2 and 3:
+
+```neon
+services:
+    - Doctrine\DBAL\DriverManager::getConnection([driver: pdo_pgsql, serverVersion: '16'])
+    - Doctrine\Persistence\Mapping\Driver\MappingDriverChain
+    - Doctrine\ORM\Mapping\Driver\AttributeDriver([])
+    - Doctrine\ORM\Mapping\Driver\XmlDriver([])
+    - Doctrine\Migrations\Configuration\Configuration
+```
+
+The mapping drivers must be registered as services, the bridge adds their paths and registers them into the driver chain.
+The `AnnotationDriver` does not exist in `doctrine/orm` 3, entity mappings with `EntityMapping::DRIVER_ANNOTATION` can't be used there.
 
 ## Usage
 
@@ -68,6 +83,10 @@ class MyExtension extends CompilerExtension implements DatabaseTypeProviderInter
     }
 }
 ```
+
+> [!IMPORTANT]
+> A type with a mapping type (the third argument of `DatabaseType`, or the option `mapping_type` below) is registered with `$connection->getDatabasePlatform()->registerDoctrineTypeMapping()` when the Connection service is created.
+> Configure the `serverVersion` of the connection, otherwise DBAL connects to the database to detect the platform version at that moment.
 
 #### Services in Doctrine Types
 
@@ -166,6 +185,14 @@ class MyExtension extends CompilerExtension implements MigrationsDirectoriesProv
     }
 }
 ```
+
+## Upgrade
+
+### 1.x → 2.0
+
+- The minimal PHP version is 8.3.
+- The option `mapping_type` of `DatabaseTypeProviderExtension` was silently ignored in 1.x, now it is applied. Configure the `serverVersion` of the connection (see above) if you use it.
+- The property `DatabaseTypeConfig::$mappingType` was renamed to `$mapping_type` (the internal config object of `DatabaseTypeProviderExtension`).
 
 ## Contributing
 

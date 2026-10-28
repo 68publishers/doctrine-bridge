@@ -9,7 +9,7 @@ final class DatabaseTypeConfig
 	/** @var class-string */
 	public string $class;
 
-	public ?string $mappingType = null;
+	public ?string $mapping_type = null;
 
 	/** @var array<string, mixed> */
 	public array $context = [];

@@ -1,0 +1,7 @@
+extensions:
+	bridge: SixtyEightPublishers\DoctrineBridge\Bridge\Nette\DI\DoctrineBridgeExtension
+	test: SixtyEightPublishers\DoctrineBridge\Tests\Fixtures\Extension\DatabaseTypeProviderExtension
+
+services:
+	- Doctrine\DBAL\DriverManager::getConnection([driver: pdo_pgsql, serverVersion: '14'])
+	- Doctrine\DBAL\DriverManager::getConnection([driver: pdo_pgsql, serverVersion: '14'])
