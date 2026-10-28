@@ -16,24 +16,25 @@ restart:
 	make start
 
 tests.all:
-	PHP=81 make tests.run
-	PHP=82 make tests.run
+	PHP=83 make tests.run
+	PHP=84 make tests.run
+	PHP=85 make tests.run
 
 cs.fix:
-	PHP=81 make composer.update
-	docker exec 68publishers.doctrine-bridge.81 vendor/bin/php-cs-fixer fix -v
+	PHP=83 make composer.update
+	docker exec 68publishers.doctrine-bridge.83 vendor/bin/php-cs-fixer fix -v
 
 cs.check:
-	PHP=81 make composer.update
-	docker exec 68publishers.doctrine-bridge.81 vendor/bin/php-cs-fixer fix -v --dry-run
+	PHP=83 make composer.update
+	docker exec 68publishers.doctrine-bridge.83 vendor/bin/php-cs-fixer fix -v --dry-run
 
 stan:
-	PHP=81 make composer.update
-	docker exec 68publishers.doctrine-bridge.81 vendor/bin/phpstan analyse
+	PHP=83 make composer.update
+	docker exec 68publishers.doctrine-bridge.83 vendor/bin/phpstan analyse
 
 coverage:
-	PHP=81 make composer.update
-	docker exec 68publishers.doctrine-bridge.81 vendor/bin/tester -p phpdbg -C -s --coverage ./coverage.xml --coverage-src ./src ./tests
+	PHP=83 make composer.update
+	docker exec 68publishers.doctrine-bridge.83 vendor/bin/tester -p phpdbg -C -s --coverage ./coverage.xml --coverage-src ./src ./tests
 
 composer.update:
 ifndef PHP
@@ -41,6 +42,7 @@ ifndef PHP
 endif
 	@echo "========== Installing dependencies with PHP $(PHP) ==========" >&2
 	docker exec 68publishers.doctrine-bridge.$(PHP) composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader --quiet
+	docker exec 68publishers.doctrine-bridge.$(PHP) composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader --quiet --working-dir=vendor-bin/nettrine
 
 composer.update-lowest:
 ifndef PHP
@@ -48,6 +50,7 @@ ifndef PHP
 endif
 	@echo "========== Installing dependencies with PHP $(PHP) (prefer lowest dependencies) ==========" >&2
 	docker exec 68publishers.doctrine-bridge.$(PHP) composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable --optimize-autoloader --quiet
+	docker exec 68publishers.doctrine-bridge.$(PHP) composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable --optimize-autoloader --quiet --working-dir=vendor-bin/nettrine
 
 tests.run:
 ifndef PHP

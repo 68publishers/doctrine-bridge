@@ -10,7 +10,6 @@ use Nette\DI\CompilerExtension;
 use SixtyEightPublishers\DoctrineBridge\Bridge\Nette\DI\Config\DatabaseTypeConfig;
 use function assert;
 use function is_array;
-use function is_string;
 
 final class DatabaseTypeProviderExtension extends CompilerExtension implements DatabaseTypeProviderInterface
 {
@@ -25,7 +24,7 @@ final class DatabaseTypeProviderExtension extends CompilerExtension implements D
 					'context' => Expect::arrayOf('mixed', 'string'),
 				]),
 			)->before(
-				static fn (string|array $databaseType): array => is_array($databaseType)
+				static fn (mixed $databaseType): array => is_array($databaseType)
 				? $databaseType
 				: ['class' => $databaseType, 'mapping_type' => null, 'context' => []]
 			)->castTo(DatabaseTypeConfig::class),
@@ -40,12 +39,12 @@ final class DatabaseTypeProviderExtension extends CompilerExtension implements D
 		assert(is_array($config));
 
 		foreach ($config as $databaseTypeName => $databaseTypeConfig) {
-			assert(is_string($databaseTypeName) && $databaseTypeConfig instanceof DatabaseTypeConfig);
+			assert($databaseTypeConfig instanceof DatabaseTypeConfig);
 
 			$databaseTypes[] = new DatabaseType(
 				name: $databaseTypeName,
 				class: $databaseTypeConfig->class,
-				mappingType: $databaseTypeConfig->mappingType,
+				mappingType: $databaseTypeConfig->mapping_type,
 				context: $databaseTypeConfig->context,
 			);
 		}

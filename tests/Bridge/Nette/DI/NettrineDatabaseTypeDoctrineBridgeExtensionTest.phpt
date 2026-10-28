@@ -80,6 +80,8 @@ final class NettrineDatabaseTypeDoctrineBridgeExtensionTest extends TestCase
 		Assert::true(Type::hasType('custom_type_extended'));
 		Assert::true(Type::hasType('custom_type_extended_2'));
 
+		Assert::same('integer', $platform->getDoctrineTypeMapping('custom_type_extended_2'));
+
 		Assert::equal(
 			CustomTypeWithContainer::create($container, []),
 			Type::getType('custom_type_inline'),

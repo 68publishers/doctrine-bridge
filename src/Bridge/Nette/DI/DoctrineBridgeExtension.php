@@ -13,12 +13,11 @@ use Nette\DI\ContainerBuilder;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\Statement;
-use Nette\DI\Definitions\Definition;
 use Nette\DI\MissingServiceException;
+use Nette\DI\ServiceCreationException;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Nette\DI\Definitions\ServiceDefinition;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
@@ -52,7 +51,7 @@ final class DoctrineBridgeExtension extends CompilerExtension
 					'chain' => Expect::anyOf(Expect::string(), false)
 						->default(MappingDriverChain::class),
 					'annotation' => Expect::anyOf(Expect::string(), false)
-						->default(AnnotationDriver::class),
+						->default('Doctrine\ORM\Mapping\Driver\AnnotationDriver'), # the driver does not exist in doctrine/orm 3
 					'xml' => Expect::anyOf(Expect::string(), false)
 						->default(XmlDriver::class),
 					'simplified_xml' => Expect::anyOf(Expect::string(), false)
@@ -106,8 +105,6 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		assert($connection instanceof ServiceDefinition);
 
 		foreach ($this->compiler->getExtensions(DatabaseTypeProviderInterface::class) as $extension) {
-			assert($extension instanceof DatabaseTypeProviderInterface);
-
 			foreach ($extension->getDatabaseTypes() as $databaseType) {
 				$connection->addSetup('if (!?::hasType(?)) ?::addType(?, ?)', [
 					ContainerBuilder::literal(Type::class),
@@ -149,8 +146,6 @@ final class DoctrineBridgeExtension extends CompilerExtension
 			: null;
 
 		foreach ($this->compiler->getExtensions(EntityMappingProviderInterface::class) as $extension) {
-			assert($extension instanceof EntityMappingProviderInterface);
-
 			foreach ($extension->getEntityMappings() as $entityMapping) {
 				switch ($entityMapping->driver) {
 					case EntityMapping::DRIVER_ANNOTATION:
@@ -248,8 +243,6 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		}
 
 		foreach ($this->compiler->getExtensions(TargetEntityProviderInterface::class) as $extension) {
-			assert($extension instanceof TargetEntityProviderInterface);
-
 			foreach ($extension->getTargetEntities() as $targetEntity) {
 				$listenerDefinition->addSetup('addResolveTargetEntity', [
 					$targetEntity->originalEntity,
@@ -270,8 +263,6 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		assert($configuration instanceof ServiceDefinition);
 
 		foreach ($this->compiler->getExtensions(MigrationsDirectoriesProviderInterface::class) as $extension) {
-			assert($extension instanceof MigrationsDirectoriesProviderInterface);
-
 			foreach ($extension->getMigrationsDirectories() as $migrationsDirectory) {
 				$configuration->addSetup('addMigrationsDirectory', [
 					$migrationsDirectory->namespace,
@@ -289,7 +280,7 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		return 0 < count($this->compiler->getExtensions($classname));
 	}
 
-	private function getDependentDefinition(string $optionPath, string $typeOrName): Definition
+	private function getDependentDefinition(string $optionPath, string $typeOrName): ?ServiceDefinition
 	{
 		$definitionName = $typeOrName;
 
@@ -300,18 +291,24 @@ final class DoctrineBridgeExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		if (!class_exists($definitionName) && !interface_exists($definitionName)) {
-			return $builder->getDefinition($definitionName);
+			$definition = $builder->getDefinition($definitionName);
+
+			return $definition instanceof ServiceDefinition ? $definition : null;
 		}
 
 		try {
-			return $builder->getDefinitionByType($definitionName);
-		} catch (MissingServiceException $e) {
+			$definition = $builder->getDefinitionByType($definitionName);
+
+			return $definition instanceof ServiceDefinition ? $definition : null;
+		} catch (MissingServiceException|ServiceCreationException $e) { // @phpstan-ignore catch.neverThrown (ServiceCreationException is thrown when multiple services of the type are autowired)
 		}
 
 		$definitions = $builder->findByType($definitionName);
 
 		if (1 === count($definitions)) {
-			return array_shift($definitions);
+			$definition = array_shift($definitions);
+
+			return $definition instanceof ServiceDefinition ? $definition : null;
 		}
 
 		throw new RuntimeException(sprintf(

@@ -11,6 +11,4 @@ if (@!include __DIR__ . '/../vendor-bin/nettrine/vendor/autoload.php') {
 
 Environment::setup();
 
-if (PHP_VERSION_ID >= 80200) {
-	error_reporting(~E_DEPRECATED);
-}
+require __DIR__ . '/deprecations.php';
