@@ -18,7 +18,7 @@ The best way to install 68publishers/doctrine-bridge is using Composer:
 $ composer require 68publishers/doctrine-bridge
 ```
 
-The package requires PHP 8.3 or newer, `nette/di` 3 and `doctrine/orm` `^2.10 || ^3.0`.
+The package requires PHP `^8.3`, `nette/di` `^3.0.10` and `doctrine/orm` `^2.10.0 || ^3.0`.
 
 ## Configuration
 
